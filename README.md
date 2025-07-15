@@ -38,17 +38,7 @@ And we handle the rest — from parsing the command to executing the smart contr
 ---
 
 ## 🧪 How It Works (Architecture)
-┌────────────┐
-│   User     │
-└────┬───────┘
-↓
-🎙️ Speak / Type → 🧠 NLP via OpenAI → 🔄 Parsed Intent
-↓
-🧾 Confirmation via Chat UI
-↓
-🛠️ ethers.js → ⛓️ Smart Contract Execution
-↓
-✅ Result + TxHash + Balance Update
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/2553b552-b402-444d-8d13-07678b62ec8e" />
 
 ---
 
@@ -88,7 +78,7 @@ And we handle the rest — from parsing the command to executing the smart contr
 
 ## 📚 How to Run Locally
 
-```bash```
+```bash
 git clone https://github.com/reddyjai30/IntelliVault.git
 cd IntelliVault
 
@@ -110,6 +100,7 @@ npm start
 # 5. Start frontend
 cd ../frontend
 npm start
+```
 
 🔐 Security & Privacy
 	•	All private keys and API keys are handled via .env
