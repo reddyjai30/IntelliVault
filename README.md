@@ -56,7 +56,7 @@ And we handle the rest — from parsing the command to executing the smart contr
 
 ## 📄 Smart Contract Info
 
-- ✅ **Contract Address**: `0xC8939c678152545E56a47B5E602DA0908Ba51807`  
+- ✅ **Contract Address**: `0x12D9A6957b5b815Fe3FE6f18f79B6300341b4f9C`  
 - ✅ **Deployed to**: [BlockDAG Primordial Testnet](https://primordial.bdagscan.com)  
 - ✅ **Source Verified**: ✔️
 
