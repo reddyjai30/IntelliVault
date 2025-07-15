@@ -72,7 +72,10 @@ And we handle the rest — from parsing the command to executing the smart contr
 
 | Voice Input | Confirmation Chat | Tx Success |
 |-------------|-------------------|------------|
-| ![input](./assets/input.png) | ![confirm](./assets/confirm.png) | ![done](./assets/success.png) |
+| <img width="2560" height="1510" alt="image" src="https://github.com/user-attachments/assets/fb579a1a-0af9-4b01-a3e1-4625db8721de" />
+ | <img width="2560" height="1510" alt="image" src="https://github.com/user-attachments/assets/d09628fd-2687-432f-b94f-423ad7a94504" />
+ | <img width="2560" height="1510" alt="image" src="https://github.com/user-attachments/assets/460d60ff-90e7-4b6c-986d-c2dfc64dcd97" />
+|
 
 ---
 
