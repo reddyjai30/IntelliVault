@@ -17,6 +17,10 @@
 //   const [updatedGasFee, setUpdatedGasFee] = useState(null);
 //   const [isListening, setIsListening] = useState(false);
 
+//   useEffect(() => {
+//     fetchBalance();
+//   }, []);
+
 //   const fetchBalance = async () => {
 //     try {
 //       const res = await axios.get('http://localhost:5003/wallet/balance');
@@ -25,10 +29,6 @@
 //       console.error('Failed to fetch balance:', err);
 //     }
 //   };
-
-//   useEffect(() => {
-//     fetchBalance();
-//   }, []);
 
 //   const fetchGasEstimate = async () => {
 //     try {
@@ -147,6 +147,40 @@
 //     recognition.start();
 //   };
 
+//   const handleRevertTransaction = async (item) => {
+//     const recipient = item.parsed?.to;
+//     const amount = item.parsed?.amount;
+
+//     if (!recipient || !amount) {
+//       alert("❌ Missing recipient or amount. Cannot revert.");
+//       return;
+//     }
+
+//     const confirmed = window.confirm(
+//       `↩ Are you sure you want to revert ${amount} BDAG to ${recipient}?`
+//     );
+//     if (!confirmed) return;
+
+//     try {
+//       const res = await axios.post('http://localhost:5003/revert', {
+//         recipient,
+//         amount,
+//       });
+
+//       if (res.data.status === 'success') {
+//         alert(`✅ Reverted! Tx Hash: ${res.data.txHash}`);
+//         setTxLink(`https://primordial.bdagscan.com/tx/${res.data.txHash}`);
+//         setShowPopup(true);
+//         await fetchBalance();
+//       } else {
+//         alert(`⚠️ Revert failed: ${res.data.message}`);
+//       }
+//     } catch (err) {
+//       console.error("🚨 Revert error:", err);
+//       alert("Something went wrong while reverting the transaction.");
+//     }
+//   };
+
 //   return (
 //     <div className="App">
 //       <h2>IntelliVault 💼</h2>
@@ -160,12 +194,11 @@
 //           placeholder="e.g. Stake 1 BDAG, then transfer 0.2"
 //         />
 //         <button type="submit">Submit</button>
-//         <button type="button" className="mic-btn" onClick={startListening}>
-//           🎤
-//         </button>
+//         <button type="button" className="mic-btn" onClick={startListening}>🎤</button>
 //         {isListening && <span className="listening-indicator">🎧 Listening...</span>}
 //       </form>
 
+//       {/* Gas Popup */}
 //       {showGasPopup && (
 //         <div className="popup-overlay">
 //           <div className="popup-box">
@@ -189,19 +222,16 @@
 //         </div>
 //       )}
 
+//       {/* Confirmation */}
 //       {awaitingConfirmation && (
 //         <div style={{ marginTop: '10px' }}>
-//           <div>
-//             <p>🔐 You are about to perform:</p>
-//             <ul>
-//               {parsedIntents.map((intent, index) => (
-//                 <li key={index}>
-//                   ➤ {intent.action} {intent.amount} {intent.token}
-//                 </li>
-//               ))}
-//             </ul>
-//             <p>Confirm?</p>
-//           </div>
+//           <p>🔐 You are about to perform:</p>
+//           <ul>
+//             {parsedIntents.map((intent, index) => (
+//               <li key={index}>➤ {intent.action} {intent.amount} {intent.token}</li>
+//             ))}
+//           </ul>
+//           <p>Confirm?</p>
 //           <button onClick={handleConfirm}>✅ Yes, Execute</button>{' '}
 //           <button onClick={handleCancel}>❌ Cancel</button>
 //         </div>
@@ -209,6 +239,7 @@
 
 //       <p>Status: {result}</p>
 
+//       {/* Transaction Explorer */}
 //       {showPopup && (
 //         <div className="popup-overlay">
 //           <div className="popup-fullscreen">
@@ -254,6 +285,22 @@
 //                 </a>
 //               </div>
 //             )}
+//             {item.status === 'success' && item.parsed?.action === 'transfer' && item.parsed?.to && (
+//               <button
+//               className="revert-btn"
+//                 style={{
+//                   marginTop: '10px',
+//                   backgroundColor: '#ffd966',
+//                   padding: '6px 10px',
+//                   border: 'none',
+//                   borderRadius: '6px',
+//                   cursor: 'pointer'
+//                 }}
+//                 onClick={() => handleRevertTransaction(item)}
+//               >
+//                 ↩ Revert
+//               </button>
+//             )}
 //           </li>
 //         ))}
 //       </ul>
@@ -262,6 +309,8 @@
 // }
 
 // export default App;
+
+
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -286,9 +335,12 @@ function App() {
     fetchBalance();
   }, []);
 
+  const CONTRACT_AGENT_URL = process.env.REACT_APP_CONTRACT_AGENT_URL;
+  const AI_AGENT_URL = process.env.REACT_APP_AI_AGENT_URL;
+
   const fetchBalance = async () => {
     try {
-      const res = await axios.get('http://localhost:5003/wallet/balance');
+      const res = await axios.get(`${CONTRACT_AGENT_URL}/wallet/balance`);
       setBalance(res.data.balance);
     } catch (err) {
       console.error('Failed to fetch balance:', err);
@@ -297,7 +349,7 @@ function App() {
 
   const fetchGasEstimate = async () => {
     try {
-      const res = await axios.get('http://localhost:5003/gas-estimate');
+      const res = await axios.get(`${CONTRACT_AGENT_URL}/gas-estimate`);
       setInitialGasFee(res.data.estimatedFee);
       setShowGasPopup(true);
     } catch (err) {
@@ -316,7 +368,7 @@ function App() {
     setResult('Parsing intent...');
 
     try {
-      const parseResponse = await axios.post('http://localhost:5002/parse-intent', {
+      const parseResponse = await axios.post(`${AI_AGENT_URL}/parse-intent`, {
         message: input,
       });
 
@@ -337,7 +389,7 @@ function App() {
 
     setTimeout(async () => {
       try {
-        const res = await axios.get('http://localhost:5003/gas-estimate');
+        const res = await axios.get(`${CONTRACT_AGENT_URL}/gas-estimate`);
         setUpdatedGasFee(res.data.estimatedFee);
       } catch (err) {
         console.error('Gas polling failed:', err);
@@ -352,7 +404,7 @@ function App() {
     setAwaitingConfirmation(false);
 
     try {
-      const executeResponse = await axios.post('http://localhost:5003/execute', {
+      const executeResponse = await axios.post(`${CONTRACT_AGENT_URL}/execute`, {
         intents: parsedIntents,
       });
 
@@ -427,7 +479,7 @@ function App() {
     if (!confirmed) return;
 
     try {
-      const res = await axios.post('http://localhost:5003/revert', {
+      const res = await axios.post(`${CONTRACT_AGENT_URL}/revert`, {
         recipient,
         amount,
       });
@@ -510,7 +562,7 @@ function App() {
           <div className="popup-fullscreen">
             <button onClick={() => setShowPopup(false)}>✖ Close</button>
             <iframe
-              src={txLink.replace('?chain=UTXO', '?chain=EVM')}
+              src={txLink}
               title="Transaction Explorer"
               width="100%"
               height="100%"

@@ -56,6 +56,7 @@ app.post('/parse-intent', async (req, res) => {
   }
 });
 
-app.listen(5002, () => {
-  console.log('AI Agent listening on http://localhost:5002');
+const PORT = process.env.PORT || 5002;
+app.listen(PORT, () => {
+  console.log(`AI Agent listening on http://localhost:${PORT}`);
 });
