@@ -95,11 +95,11 @@ npx hardhat run scripts/deploy.js --network blockdag
 
 # 4. Start backend
 cd contract-agent
-npm start
+node index.js
 
 # 5. Start ai agent
 cd ai-agent
-npm start
+node index.js
 
 # 6. Start frontend
 cd ../frontend
