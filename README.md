@@ -97,7 +97,11 @@ npx hardhat run scripts/deploy.js --network blockdag
 cd contract-agent
 npm start
 
-# 5. Start frontend
+# 5. Start ai agent
+cd ai-agent
+npm start
+
+# 6. Start frontend
 cd ../frontend
 npm start
 ```
