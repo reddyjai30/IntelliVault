@@ -64,7 +64,7 @@ And we handle the rest — from parsing the command to executing the smart contr
 
 ## 🎥 Demo Video
 
-👉 [Watch on YouTube (2-min Walkthrough)](https://youtu.be/your-demo-link-here)
+👉 [Watch on YouTube (Walkthrough)](https://youtu.be/nNhVDyGPqs0)
 
 ---
 
